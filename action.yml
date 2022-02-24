@@ -1,0 +1,21 @@
+name: 'Conventional Versioning'
+description: 'Create Github Release using SemVer when pushing Conventional Comits'
+author: ArwynFr
+branding:
+  icon: tag
+  color: blue
+inputs:
+  pattern:
+    description: 'Pattern of files to include in the release'
+    required: false
+runs:
+  using: "composite"
+  steps:
+
+    - shell: pwsh
+      run: |
+        "${{ github.token }}" | gh auth login --with-token
+        & "$env:GITHUB_ACTION_PATH/functions/New-GithubRelease.ps1" `
+          -RepositoryName "${{ github.repository }}" `
+          -CommitMessage "${{ github.event.head_commit.message }}" `
+          -Pattern "${{ inputs.pattern }}"
