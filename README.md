@@ -27,6 +27,21 @@ This pattern matches the syntax for [`gh release create`](https://cli.github.com
 ### Pattern
 Wildcard pattern used to add files in the release.
 
+### Whatif
+Used to run the action in what-if mode, that will calculate the new version without creating an actual release.
+This can be used to add the next-version number in the product source before build.
+If you want to run the action in what-if mode, you must set the value to `$true`.
+
+## Outputs
+### Current-version
+Current version found in the repository, format `1.2.3`.
+
+### Bump-type
+Type of version bumping, one of the following: `Breaking`, `Feature`, `Fix`.
+
+### Next-version
+Version number for the new release, format `1.2.3`.
+
 ## Example
 
 This action will create a release with artifacts for each commit on the master branch :
