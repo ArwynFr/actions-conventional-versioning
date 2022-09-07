@@ -1,10 +1,10 @@
 [CmdletBinding(SupportsShouldProcess)]
 param (
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory)]
     [string]
     $RepositoryName,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter()]
     [string]
     $CommitMessage,
 
