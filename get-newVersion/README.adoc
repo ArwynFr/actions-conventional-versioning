@@ -1,0 +1,44 @@
+= Conventional Versioning: get new version
+:toc: preamble
+
+This Github action calculates a new product version, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/[Conventional Commits] messages.
+
+include::../README.adoc[tag=about]
+
+== Inputs
+_None_
+
+== Outputs
+Current-version::
+Current version found in the repository, format `1.2.3`.
+
+Bump-type::
+Type of version bumping, one of the following: `Breaking`, `Feature`, `Fix`.
+
+Next-version::
+Version number for the new release, format `1.2.3`.
+
+## Example
+
+This action will create a release with artifacts for each commit on the master branch :
+
+```yml
+on:
+  push:
+    branches: [master]
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+    name: 'Compute new version'
+    steps:
+
+    - uses: arwynfr/actions-conventional-versioning/get-newVersion@1.0.0
+      id: next-version
+
+    - run: echo ${{ steps.next-version.output.next-version }}
+
+    - run: echo ${{ steps.next-version.output.bump-type }}
+      
+```
