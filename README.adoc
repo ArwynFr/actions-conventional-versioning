@@ -3,7 +3,6 @@
 
 This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/[Conventional Commits] messages.
 
-// tag::about[]
 == About
 === Current version
 The current version is based on latest Github Release *tag name*.
@@ -26,7 +25,6 @@ This action uses https://cli.github.com/[Github CLI] and needs **not** to checko
 The release will autogenerate the notes, tag the source code, and include source archives to the release by default.
 You can add additional files using the `pattern` input variable.
 This pattern matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command.
-// end::about[]
 
 == Inputs
 Pattern::
