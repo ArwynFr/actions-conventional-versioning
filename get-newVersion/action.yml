@@ -1,21 +1,9 @@
-name: 'Conventional Versioning: new release'
-description: 'Create Github Release using SemVer when pushing Conventional Comits'
+name: 'Conventional Versioning: get new version'
+description: 'Provides the new SemVer version based on Conventional Comits'
 author: ArwynFr
 branding:
   icon: tag
   color: blue
-
-inputs:
-
-  pattern:
-    description: 'Pattern of files to include in the release'
-    required: false
-
-  whatif:
-    description: 'Set to "$true" if you want to calculate the next-version without creating the release'
-    required: false
-    default: '$false'
-    deprecationMessage: 'Please use new action instead: arwynfr/actions-conventional-versioning/get-newVersion'
 
 outputs:
 
@@ -42,5 +30,4 @@ runs:
         & "${env:GITHUB_ACTION_PATH}/functions/New-GithubRelease.ps1" `
           -RepositoryName "${{ github.repository }}" `
           -CommitMessage "${{ github.event.head_commit.message }}" `
-          -Pattern "${{ inputs.pattern }}" `
-          -Whatif:${{ inputs.whatif }}
+          -Whatif
