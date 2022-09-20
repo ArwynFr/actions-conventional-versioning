@@ -21,9 +21,9 @@ Write-Host "::set-output name=current-version::$Private:currentVersion"
 Write-Host "::set-output name=bump-type::$Private:bumpType"
 Write-Host "::set-output name=next-version::$Private:nextVersion"
 
-Write-Host "current-version: $Private:currentVersion"
-Write-Host "bump-type: $Private:bumpType"
-Write-Host "next-version: $Private:nextVersion"
+Write-Output "current-version: $Private:currentVersion"
+Write-Output "bump-type: $Private:bumpType"
+Write-Output "next-version: $Private:nextVersion"
 
 if ($PSCmdlet.ShouldProcess($private:nextVersion, 'gh release create')) {
     gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName" "$Pattern"
