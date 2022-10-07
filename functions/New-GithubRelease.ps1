@@ -27,4 +27,6 @@ Write-Output "next-version: $Private:nextVersion"
 
 if ($PSCmdlet.ShouldProcess($private:nextVersion, 'gh release create')) {
     gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName" "$Pattern"
+    git tag --force "v$($Private:nextVersion.Major).$($Private:nextVersion.Minor)"
+    git tag --force "v$($Private:nextVersion.Major)"
 }
