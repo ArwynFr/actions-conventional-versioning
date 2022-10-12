@@ -15,7 +15,9 @@ runs:
     - name: Add major and minor tags
       shell: pwsh
       run: |
-        $version = ((gh release view --json tagName) | convertfrom-json).TagName
+        $release = (gh release view --json tagName) | convertfrom-json
+        $version = [semver]::new($release.tagName)
+        Write-Debug "Current version is $version"
         git tag --force "v$($version.Major).$($version.Minor)"
         git tag --force "v$($version.Major)"
         git push origin --tags
