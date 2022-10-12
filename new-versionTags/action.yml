@@ -20,4 +20,4 @@ runs:
         Write-Debug "Current version is $version"
         git tag --force "v$($version.Major).$($version.Minor)"
         git tag --force "v$($version.Major)"
-        git push origin --tags
+        git push origin --tags --force
