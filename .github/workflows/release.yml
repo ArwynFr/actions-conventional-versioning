@@ -7,8 +7,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    name: 'Publish a new release'
+    name: "Publish a new release"
     steps:
+      - name: Create Github release
+        uses: arwynfr/actions-conventional-versioning@master
 
-    - name: Create Github release
-      uses: arwynfr/actions-conventional-versioning@master
+      - name: Create version tags
+        uses: arwynfr/actions-conventional-versioning/new-versionTags@master
