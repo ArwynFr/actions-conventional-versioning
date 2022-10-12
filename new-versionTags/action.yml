@@ -1,0 +1,20 @@
+name: "Conventional Versioning: new version tags"
+description: "Adds minor and major version tags to the repository"
+author: ArwynFr
+
+branding:
+  icon: tag
+  color: blue
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Add major and minor tags
+      shell: pwsh
+      run: |
+        $version = ((gh release view --json tagName) | convertfrom-json).TagName
+        git tag --force "v$($version.Major).$($version.Minor)"
+        git tag --force "v$($version.Major)"
