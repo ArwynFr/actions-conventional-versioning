@@ -26,5 +26,10 @@ Write-Output "bump-type: $Private:bumpType"
 Write-Output "next-version: $Private:nextVersion"
 
 if ($PSCmdlet.ShouldProcess($private:nextVersion, 'gh release create')) {
-    gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName" "$Pattern"
+    if (($null -eq $Pattern) -or ('' -eq $Pattern)) {
+        gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName"
+    }
+    else {
+        gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName" (Get-Item "$Pattern")
+    }
 }
