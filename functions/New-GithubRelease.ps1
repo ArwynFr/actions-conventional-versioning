@@ -21,10 +21,6 @@ Write-Host "current-version=$Private:currentVersion" >> $env:GITHUB_OUTPUT
 Write-Host "bump-type=$Private:bumpType" >> $env:GITHUB_OUTPUT
 Write-Host "next-version=$Private:nextVersion" >> $env:GITHUB_OUTPUT
 
-Write-Output "current-version: $Private:currentVersion"
-Write-Output "bump-type: $Private:bumpType"
-Write-Output "next-version: $Private:nextVersion"
-
 if ($PSCmdlet.ShouldProcess($private:nextVersion, 'gh release create')) {
     if (($null -eq $Pattern) -or ('' -eq $Pattern)) {
         gh release create "$private:nextVersion" --generate-notes --repo "$RepositoryName"
