@@ -6,7 +6,9 @@ This Github action creates a new Github Release, using https://semver.org/[Seman
 == About
 === Current version
 The current version is based on latest Github Release *tag name*.
-If there is no release or the tag is not a valid version number, the action will default to `0.0.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.0.0`.
+If there is no release or the tag is not a valid version number, the action will default to `0.0.0`.
+Current version should not include any prefix.
+Values such as `v1.2.3` or `ver-1.2.3` are **not** understood and will default to `0.0.0`.
 
 === Change type
 The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]:
@@ -23,8 +25,10 @@ You should consider using this action in conjunction with another one enforcing 
 === Release creation
 This action uses https://cli.github.com/[Github CLI] and needs **not** to checkout the repository.
 The release will autogenerate the notes, tag the source code, and include source archives to the release by default.
-You can add additional files using the `pattern` input variable.
-This pattern matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command.
+You can add additional files using the `pattern` input variable:
+
+* Version `v0` matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command and does not expand wildcards
+* Version `v1` will expand wildcards so you can use patterns such as `*.zip`
 
 == Inputs
 Pattern::
@@ -63,11 +67,11 @@ jobs:
         name: my-artifact
         path: artifacts
 
-    - uses: arwynfr/actions-conventional-versioning@1.0.0
+    - uses: arwynfr/actions-conventional-versioning@v1
       with:
         pattern: artifacts/*
 ```
 
-== Get-NewVersion
-
-If you need to get the new version without publishing a new release, for instance because you want to change sources to set the new version number, you can use link:get-newVersion/README.adoc[get-newVersion] action instead. This action replaces obsolete `whatif` input parameter.
+== Other actions
+link:get-newVersion/README.adoc[get-newVersion]:: Calculates the new version number without creating a Release. Usefull before build if you want to embed the new version number in the sources. This action replaces obsolete `whatif` input parameter.
+link:new-versionTags/README.adoc[new-versionTags]:: Adds major (`v1`) and minor (`v1.2`) tags to the repository. Usefull with GitHub actions, or any situation when you want to allow other repositories to reference the "latest" version of a given major or minor version.
