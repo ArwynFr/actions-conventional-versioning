@@ -1,23 +1,28 @@
 = Conventional Versioning: get new version
 :toc: preamble
 
-This Github action calculates a new product version, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/[Conventional Commits] messages.
+This Github action calculates a new product version, using https://semver.org/[Semantic Versioning].
+
+WARNING: Version 2 of this action dropped support from conventional commits 1.0.0.
 
 == About
 === Current version
 The current version is based on latest Github Release *tag name*.
-If there is no release or the tag is not a valid version number, the action will default to `0.0.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.0.0`.
+If there is no release or the tag is not a valid version number, the action will default to `0.1.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.1.0`.
 
 === Change type
-The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]:
+The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]. The commit message is expected to follow the format `<type>: message`. The type of version change depends on the type provided:
 
-* `Fix` will bump the patch version
-* `Feature` will bump the minor version
-* `Breaking` will bump major version
+* `patch` will bump the patch version number
+* `minor` will bump the minor version number
+* `major` will bump the major version number
 
-Breaking changes can either use the explicit notation (`BREAKING CHANGE:` in the body or footer) or the bang notation (`type(scope)!: description` in the first line).
-Feature must use the `feat` type value.
-If the message is not understood as a valid conventional commit, the change type will default to `Fix`.
+If type is not found the action will then look for long-format tokens in the commit message:
+
+* `BREAKING CHANGE:` for major updates
+* `NEW FEATURE:` for minor updates
+
+If the message is not understood as a valid conventional commit, the change type will default to `patch`.
 You should consider using this action in conjunction with another one enforcing commit message format.
 
 === Release creation
@@ -34,7 +39,7 @@ Current-version::
 Current version found in the repository, format `1.2.3`.
 
 Bump-type::
-Type of version bumping, one of the following: `Breaking`, `Feature`, `Fix`.
+Type of version bumping, one of the following: `major`, `minor`, `patch`.
 
 Next-version::
 Version number for the new release, format `1.2.3`.
@@ -46,7 +51,7 @@ This action will create a release with artifacts for each commit on the master b
 ```yml
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
 
@@ -55,7 +60,7 @@ jobs:
     name: 'Compute new version'
     steps:
 
-    - uses: arwynfr/actions-conventional-versioning/get-newVersion@1.0.0
+    - uses: arwynfr/actions-conventional-versioning/get-newVersion@v2
       id: next-version
 
     - run: echo ${{ steps.next-version.output.next-version }}

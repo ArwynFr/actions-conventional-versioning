@@ -9,11 +9,11 @@ param (
     $BumpType
 )
 
-if ('Breaking' -eq $BumpType) {
+if ('major' -eq $BumpType) {
     return [semver]::new($Version.Major + 1)
 }
 
-if ('Feature' -eq $BumpType) {
+if ('minor' -eq $BumpType) {
     return [semver]::new($Version.Major, $Version.Minor + 1)
 }
 
