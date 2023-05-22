@@ -1,45 +1,45 @@
 = Conventional Versioning: new release
 :toc: preamble
 
-This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/[Conventional Commits] messages.
+This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning].
+
+WARNING: Version 2 of this action dropped support from conventional commits 1.0.0.
 
 == About
 === Current version
 The current version is based on latest Github Release *tag name*.
-If there is no release or the tag is not a valid version number, the action will default to `0.0.0`.
-Current version should not include any prefix.
-Values such as `v1.2.3` or `ver-1.2.3` are **not** understood and will default to `0.0.0`.
+If there is no release or the tag is not a valid version number, the action will default to `0.1.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.1.0`.
 
 === Change type
-The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]:
+The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]. The commit message is expected to follow the format `<type>: message`. The type of version change depends on the type provided:
 
-* `Fix` will bump the patch version
-* `Feature` will bump the minor version
-* `Breaking` will bump major version
+* `patch` will bump the patch version number
+* `minor` will bump the minor version number
+* `major` will bump the major version number
 
-Breaking changes can either use the explicit notation (`BREAKING CHANGE:` in the body or footer) or the bang notation (`type(scope)!: description` in the first line).
-Feature must use the `feat` type value.
-If the message is not understood as a valid conventional commit, the change type will default to `Fix`.
+If type is not found the action will then look for long-format tokens in the commit message:
+
+* `BREAKING CHANGE:` for major updates
+* `NEW FEATURE:` for minor updates
+
+If the message is not understood as a valid conventional commit, the change type will default to `patch`.
 You should consider using this action in conjunction with another one enforcing commit message format.
 
 === Release creation
 This action uses https://cli.github.com/[Github CLI] and needs **not** to checkout the repository.
 The release will autogenerate the notes, tag the source code, and include source archives to the release by default.
-You can add additional files using the `pattern` input variable:
-
-* Version `v0` matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command and does not expand wildcards
-* Version `v1` will expand wildcards so you can use patterns such as `*.zip`
+You can add additional files using the `pattern` input variable.
+This pattern matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command.
 
 == Inputs
-Pattern::
-Wildcard pattern used to add files in the release.
+_None_
 
 == Outputs
 Current-version::
 Current version found in the repository, format `1.2.3`.
 
 Bump-type::
-Type of version bumping, one of the following: `Breaking`, `Feature`, `Fix`.
+Type of version bumping, one of the following: `major`, `minor`, `patch`.
 
 Next-version::
 Version number for the new release, format `1.2.3`.
@@ -51,7 +51,7 @@ This action will create a release with artifacts for each commit on the master b
 ```yml
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
 
@@ -67,7 +67,7 @@ jobs:
         name: my-artifact
         path: artifacts
 
-    - uses: arwynfr/actions-conventional-versioning@v1
+    - uses: arwynfr/actions-conventional-versioning@v2
       with:
         pattern: artifacts/*
 ```

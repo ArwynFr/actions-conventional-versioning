@@ -5,17 +5,18 @@ param (
     $CommitMessage
 )
 
+$ConventionalCommit = $CommitMessage -match '^(patch|minor|major): '
+
+if ($ConventionalCommit) {
+    return $Matches[1]
+}
+
 if ($CommitMessage -match 'BREAKING CHANGE:') {
-    return 'Breaking'
+    return 'major'
 }
 
-$private:commitFirstLine = ($CommitMessage -split [Environment]::NewLine)[0]
-if (($private:commitFirstLine -split ": ")[0].EndsWith('!')) {
-    return 'Breaking'
+if ($CommitMessage -match 'NEW FEATURE:') {
+    return 'minor'
 }
 
-if ($private:commitFirstLine.StartsWith("feat")) {
-    return 'Feature'
-}
-
-return 'Fix'
+return 'patch'
