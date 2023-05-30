@@ -1,29 +1,13 @@
 = Conventional Versioning: new release
 :toc: preamble
 
-This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning].
+This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits].
 
-WARNING: Version 2 of this action dropped support from conventional commits 1.0.0.
 
 == About
-=== Current version
-The current version is based on latest Github Release *tag name*.
-If there is no release or the tag is not a valid version number, the action will default to `0.1.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.1.0`.
 
-=== Change type
-The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]. The commit message is expected to follow the format `<type>: message`. The type of version change depends on the type provided:
-
-* `patch` will bump the patch version number
-* `minor` will bump the minor version number
-* `major` will bump the major version number
-
-If type is not found the action will then look for long-format tokens in the commit message:
-
-* `BREAKING CHANGE:` for major updates
-* `NEW FEATURE:` for minor updates
-
-If the message is not understood as a valid conventional commit, the change type will default to `patch`.
-You should consider using this action in conjunction with another one enforcing commit message format.
+=== Versioning rules
+See link:get-newVersion/README.adoc[get-newVersion] for details on versioning rules.
 
 === Release creation
 This action uses https://cli.github.com/[Github CLI] and needs **not** to checkout the repository.
@@ -32,9 +16,21 @@ You can add additional files using the `pattern` input variable.
 This pattern matches the syntax for https://cli.github.com/manual/gh_release_create[`gh release create`] command.
 
 == Inputs
-_None_
+
+Pattern::
+*Optional*. Files to include in the GitHub release.
+
+Allow-additional-modifiers::
+*Optional*. Set to `true` to support using additional modifiers `+` and `-` for minor and patch level updates respectively. Also supports using `NEW FEATURE:` footer for minor updates.
+  
+Feat-upgrades-minor::
+*Optional*. Set to `false` to increment a patch bump instead of a minor one when the commit type is `feat:`.
+  
+Strict-types::
+*Optional*. Set to `true` to fail this action when the commit type is not in the following list: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`.
 
 == Outputs
+
 Current-version::
 Current version found in the repository, format `1.2.3`.
 

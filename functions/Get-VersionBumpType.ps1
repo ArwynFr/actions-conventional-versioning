@@ -2,21 +2,29 @@
 param (
     [Parameter()]
     [string]
-    $CommitMessage
+    $CommitMessage,
+
+    [Parameter()]
+    [switch]
+    $FeatUpgradesMinor,
+
+    [Parameter()]
+    [switch]
+    $AllowAdditionalModifiers,
+    
+    [Parameter()]
+    [switch]
+    $StrictTypes
 )
 
-$ConventionalCommit = $CommitMessage -match '^(patch|minor|major): '
-
-if ($ConventionalCommit) {
-    return $Matches[1]
+$conventions = $CommitMessage | ConvertTo-ConventionalCommitHeader -StrictTypes:$StrictTypes -AdditionalModifiers:$AllowAdditionalModifiers
+$modifier_bump = '-+!'.IndexOf($conventions.Modifier ?? '-')
+$type_bump = $conventions.Type -eq 'feat' -and $FeatUpgradesMinor ? 1 : 0
+$long_bump = switch ($true) {
+    ($CommitMessage -match '\nBREAKING CHANGE: ') { 2 }
+    ($CommitMessage -match '\nNEW FEATURE: ') { $AllowAdditionalModifiers ? 1 : 0 }
+    default { 0 }
 }
 
-if ($CommitMessage -match 'BREAKING CHANGE:') {
-    return 'major'
-}
-
-if ($CommitMessage -match 'NEW FEATURE:') {
-    return 'minor'
-}
-
-return 'patch'
+$bump = (@($modifier_bump, $type_bump, $long_bump) | Measure-Object -Maximum).Maximum
+return @('patch', 'minor', 'major')[$bump]
