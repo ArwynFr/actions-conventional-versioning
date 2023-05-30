@@ -11,11 +11,11 @@ jobs:
     steps:
 
       - name: Create Github release
-        uses: arwynfr/actions-conventional-versioning@master
+        uses: arwynfr/actions-conventional-versioning@main
         with:
           allow-additional-modifiers: true
           feat-upgrades-minor: false
           strict-types: true
 
       - name: Create version tags
-        uses: arwynfr/actions-conventional-versioning/new-versionTags@master
+        uses: arwynfr/actions-conventional-versioning/new-versionTags@main
