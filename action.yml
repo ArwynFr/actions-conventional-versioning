@@ -47,7 +47,7 @@ runs:
     - shell: pwsh
       id: new-github-release
       run: |
-        $NextVersion = & "${env:GITHUB_ACTION_PATH}/../functions/Get-NewVersion.ps1" `
+        $NextVersion = & "${env:GITHUB_ACTION_PATH}/functions/Get-NewVersion.ps1" `
           -RepositoryName "${{ github.repository }}" `
           -CommitMessage "${{ github.event.head_commit.message }}" `
           -FeatUpgradesMinor:$${{ inputs.feat-upgrades-minor }} `
