@@ -54,6 +54,11 @@ runs:
           -CommitMessage "${{ github.event.head_commit.message }}" `
           -FeatUpgradesMinor:$${{ inputs.feat-upgrades-minor }} `
           -AllowAdditionalModifiers:$${{ inputs.allow-additional-modifiers }}
+          
+    - shell: pwsh
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
         & "${env:GITHUB_ACTION_PATH}/functions/New-GithubRelease.ps1" `
           -Pattern "${{ inputs.pattern }}" `
           -NextVersion $NextVersion
