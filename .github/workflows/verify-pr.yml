@@ -1,0 +1,22 @@
+name: Verify PR title
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Verify PR title
+        shell: pwsh
+        run: |
+          Install-Module -Force ConventionalCommits
+          Import-Module -Force ConventionalCommits
+          "${{ github.event.pull_request.title }}" | ConvertTo-ConventionalCommitHeader -StrictTypes -AdditionalModifiers
