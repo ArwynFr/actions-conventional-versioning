@@ -2,15 +2,20 @@ name: release
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   release:
     runs-on: ubuntu-latest
     name: "Publish a new release"
     steps:
+
       - name: Create Github release
         uses: arwynfr/actions-conventional-versioning@master
+        with:
+          allow-additional-modifiers: true
+          feat-upgrades-minor: false
+          strict-types: true
 
       - name: Create version tags
         uses: arwynfr/actions-conventional-versioning/new-versionTags@master

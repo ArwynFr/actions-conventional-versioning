@@ -11,11 +11,20 @@ inputs:
     description: 'Pattern of files to include in the release'
     required: false
 
-  whatif:
-    description: 'Set to "$true" if you want to calculate the next-version without creating the release'
+  allow-additional-modifiers:
+    description: 'Whether this action supports additional modifiers and footers for minor and patch updates.'
     required: false
-    default: '$false'
-    deprecationMessage: 'Please use new action instead: arwynfr/actions-conventional-versioning/get-newVersion'
+    default: 'false'
+
+  feat-upgrades-minor:
+    description: 'Whether this action should increment a minor bump when the commit type is feat.'
+    required: false
+    default: 'true'
+
+  strict-types:
+    description: 'Whether this action should fail if the commit type is a custom type.'
+    required: false
+    default: 'false'
 
 outputs:
 
@@ -37,10 +46,20 @@ runs:
 
     - shell: pwsh
       id: new-github-release
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
-        "${{ github.token }}" | gh auth login --with-token
-        & "${env:GITHUB_ACTION_PATH}/functions/New-GithubRelease.ps1" `
+        & "${env:GITHUB_ACTION_PATH}/functions/Get-NewVersion.ps1" `
           -RepositoryName "${{ github.repository }}" `
           -CommitMessage "${{ github.event.head_commit.message }}" `
+          -FeatUpgradesMinor:$${{ inputs.feat-upgrades-minor }} `
+          -AllowAdditionalModifiers:$${{ inputs.allow-additional-modifiers }}
+
+    - shell: pwsh
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        & "${env:GITHUB_ACTION_PATH}/functions/New-GithubRelease.ps1" `
+          -RepositoryName "${{ github.repository }}" `
           -Pattern "${{ inputs.pattern }}" `
-          -Whatif:${{ inputs.whatif }}
+          -NextVersion ${{ steps.new-github-release.outputs.next-version }}
