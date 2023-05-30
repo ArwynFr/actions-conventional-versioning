@@ -60,5 +60,6 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: |
         & "${env:GITHUB_ACTION_PATH}/functions/New-GithubRelease.ps1" `
+          -RepositoryName "${{ github.repository }}" `
           -Pattern "${{ inputs.pattern }}" `
           -NextVersion ${{ steps.new-github-release.outputs.next-version }}

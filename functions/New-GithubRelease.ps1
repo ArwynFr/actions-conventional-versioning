@@ -1,6 +1,10 @@
 [CmdletBinding(SupportsShouldProcess)]
 param (
     [Parameter(Mandatory)]
+    [string]
+    $RepositoryName,
+    
+    [Parameter(Mandatory)]
     [semver]
     $NextVersion,
 
