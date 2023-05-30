@@ -11,12 +11,12 @@ inputs:
     description: 'Whether this action supports additional modifiers and footers for minor and patch updates.'
     required: false
     default: 'false'
-  
+
   feat-upgrades-minor:
     description: 'Whether this action should increment a minor bump when the commit type is feat.'
     required: false
     default: 'true'
-  
+
   strict-types:
     description: 'Whether this action should fail if the commit type is a custom type.'
     required: false
