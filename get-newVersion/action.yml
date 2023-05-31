@@ -42,6 +42,8 @@ runs:
 
     - shell: pwsh
       id: new-github-release
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         & "${env:GITHUB_ACTION_PATH}/../functions/Get-NewVersion.ps1" `
           -RepositoryName "${{ github.repository }}" `
