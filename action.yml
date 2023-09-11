@@ -41,7 +41,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: arwynfr/actions-conventional-versioning/get-newVersion@v3
+    - uses: actions/checkout@v4
+      name: Checkout source files
+
+    - uses: ./get-newVersion
       id: new-github-release
       env:
         GH_TOKEN: ${{ github.token }}
