@@ -1,12 +1,12 @@
 = Conventional Versioning: get-newVersion
 :toc: preamble
 
-This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits].
+This Github action calculates a repository commit version, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits].
 
 == About
 === Current version
 The current version is based on latest Github Release *tag name*.
-If there is no release or the tag is not a valid version number, the action will default to `0.1.0`. Current version should not include any prefix, values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.1.0`.
+If there is no release or the tag is not a valid version number, the action will default to `0.1.0`. Current version should not include any prefix ; values such as `v1.2.3` or `ver-1.2.3` are **not** understood by this action and will have the action use default value of `0.1.0`.
 
 === Change type
 The type of version change is based on HEAD commit message, taken from https://docs.github.com/en/actions/learn-github-actions/contexts[`github.event` context]. The commit message is expected to follow the format specified in the conventional commits specifications:
@@ -52,12 +52,12 @@ jobs:
     name: 'Compute new version'
     steps:
 
-    - uses: arwynfr/actions-conventional-versioning/get-newVersion@v2
+    - uses: arwynfr/actions-conventional-versioning/get-newVersion@v3
       id: next-version
       with:
-        allow-additional-modifiers: 'true'
-        feat-upgrades-minor: 'false'
-        strict-types: 'true'
+        allow-additional-modifiers: true
+        feat-upgrades-minor: false
+        strict-types: true
 
     - run: echo ${{ steps.next-version.output.next-version }}
 

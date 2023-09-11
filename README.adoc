@@ -1,13 +1,16 @@
 = Conventional Versioning: new release
 :toc: preamble
 
-This Github action creates a new Github Release, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits].
-
+This Github action creates a new Github Release and tags your commits, using https://semver.org/[Semantic Versioning] and https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits].
 
 == About
 
 === Versioning rules
 See link:get-newVersion/README.adoc[get-newVersion] for details on versioning rules.
+
+It is recommended to set the pull request policy of your repository to __Default to pull request title and commit details__ in the Settings/General page of your repository.
+
+The new version will default to `0.1.0`.
 
 === Release creation
 This action uses https://cli.github.com/[Github CLI] and needs **not** to checkout the repository.
@@ -18,13 +21,13 @@ This pattern matches the syntax for https://cli.github.com/manual/gh_release_cre
 == Inputs
 
 Pattern::
-*Optional*. Files to include in the GitHub release.
+*Optional*. Files to include in the GitHub release. The release will always include a source code archive.
 
 Allow-additional-modifiers::
-*Optional*. Set to `true` to support using additional modifiers `+` and `-` for minor and patch level updates respectively. Also supports using `NEW FEATURE:` footer for minor updates.
+*Optional*. Set to `true` to support using additional modifiers `+` and `-` for minor and patch level updates respectively. Also supports using `NEW FEATURE:` footer for minor updates. See below for details on the feat: dispute.
   
 Feat-upgrades-minor::
-*Optional*. Set to `false` to increment a patch bump instead of a minor one when the commit type is `feat:`.
+*Optional*. Set to `false` to increment a patch bump instead of a minor one when the commit type is `feat:`. See below for details on the feat: dispute.
   
 Strict-types::
 *Optional*. Set to `true` to fail this action when the commit type is not in the following list: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`.
@@ -63,11 +66,37 @@ jobs:
         name: my-artifact
         path: artifacts
 
-    - uses: arwynfr/actions-conventional-versioning@v2
+    - uses: arwynfr/actions-conventional-versioning@v3
       with:
         pattern: artifacts/*
+        allow-additional-modifiers: true
+        feat-upgrades-minor: false
+        strict-types: true
 ```
 
 == Other actions
 link:get-newVersion/README.adoc[get-newVersion]:: Calculates the new version number without creating a Release. Usefull before build if you want to embed the new version number in the sources. This action replaces obsolete `whatif` input parameter.
 link:new-versionTags/README.adoc[new-versionTags]:: Adds major (`v1`) and minor (`v1.2`) tags to the repository. Usefull with GitHub actions, or any situation when you want to allow other repositories to reference the "latest" version of a given major or minor version.
+
+
+## The `feat:` dispute
+[IMPORTANT]
+====
+There is a dispute in the community as to whether using a `feat:` commit type should yield a minor or patch version update.
+
+The official position of https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits] is that adding features to your code base should use `feat:` type in the commit message, and this should yield a minor update. However https://semver.org/[Semantic Versioning] states that minor updates happens when the _public API_ adds features (or more precisely backward compatible changes).
+
+My personnal opinion is that adding features to a service does not automatically imply changes to the public API. I think developpers should use the `feat:` type whenever adding features to the codebase and that it should yield a patch-level version change if this does not alter the public API. Detecting whether a changes is backward compatible and whether it impacts the public API is not a trivial task and should be declarative.
+
+After a short time of indecision as to whether this project should follow the conventional commits standard or fork from it, I decided to do both :
+
+* By default, the action follows conventional commits ;
+* You may customize the behavior using `allow-additional-modifiers` and `feat-upgrades-minor` input flags.
+
+This is why we introduced the concept of additional modifiers, namely `+` and `-`, that extend the official `!` modifier in a similar way to indicate, respectiveley, minor and patch level updates in the commit message. The `-` modifier is, of course, optional. By using input flags, you can change the behavior of the action to obtain the following behavior:
+
+* `feat: cypher database connection` => patch level (no API change)
+* `perf+: add cache http headers` => minor update (API change)
+====
+
+You can share your thoughts on this issue: https://github.com/conventional-commits/conventionalcommits.org/issues/528
