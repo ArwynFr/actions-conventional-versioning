@@ -1,49 +1,46 @@
-name: 'Conventional Versioning: new release'
-description: 'Create Github Release using SemVer when pushing Conventional Comits'
+name: "Conventional Versioning: new release"
+description: "Create Github Release using SemVer when pushing Conventional Comits"
 author: ArwynFr
 branding:
   icon: tag
   color: blue
 
 inputs:
-
   pattern:
-    description: 'Pattern of files to include in the release'
+    description: "Pattern of files to include in the release"
     required: false
 
   allow-additional-modifiers:
-    description: 'Whether this action supports additional modifiers and footers for minor and patch updates.'
+    description: "Whether this action supports additional modifiers and footers for minor and patch updates."
     required: false
-    default: 'false'
+    default: "false"
 
   feat-upgrades-minor:
-    description: 'Whether this action should increment a minor bump when the commit type is feat.'
+    description: "Whether this action should increment a minor bump when the commit type is feat."
     required: false
-    default: 'true'
+    default: "true"
 
   strict-types:
-    description: 'Whether this action should fail if the commit type is a custom type.'
+    description: "Whether this action should fail if the commit type is a custom type."
     required: false
-    default: 'false'
+    default: "false"
 
 outputs:
-
   current-version:
-    description: 'Current release version number found in the repository'
+    description: "Current release version number found in the repository"
     value: ${{ steps.new-github-release.outputs.current-version }}
 
   bump-type:
-    description: 'Type of version bump based on commit message'
+    description: "Type of version bump based on commit message"
     value: ${{ steps.new-github-release.outputs.bump-type }}
 
   next-version:
-    description: 'Calculated target version of the new release'
+    description: "Calculated target version of the new release"
     value: ${{ steps.new-github-release.outputs.next-version }}
 
 runs:
   using: "composite"
   steps:
-
     - shell: pwsh
       id: new-github-release
       env:
