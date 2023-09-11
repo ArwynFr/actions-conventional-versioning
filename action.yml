@@ -41,17 +41,23 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-      name: Checkout source files
+    - shell: pwsh
+      name: Install Powershell module ConventionalVersioning
+      run: |
+        Install-Module -Force ConventionalVersioning
+        Import-Module -Force ConventionalVersioning
 
-    - uses: ./get-newVersion
+    - shell: pwsh
+      name: Calculate new version for the repository
       id: new-github-release
       env:
         GH_TOKEN: ${{ github.token }}
-      with:
-        allow-additional-modifiers: ${{ inputs.allow-additional-modifiers }}
-        feat-upgrades-minor: ${{ inputs.feat-upgrades-minor }}
-        strict-types: ${{ inputs.strict-types }}
+      run: |
+        New-RepositoryVersion `
+          -RepositoryName "${{ github.repository }}" `
+          -CommitMessage "${{ github.event.head_commit.message }}" `
+          -FeatUpgradesMinor:$${{ inputs.feat-upgrades-minor }} `
+          -AllowAdditionalModifiers:$${{ inputs.allow-additional-modifiers }}
 
     - shell: pwsh
       name: Publish a new release on Github
